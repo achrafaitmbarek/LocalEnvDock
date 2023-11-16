@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  reverse_proxy:
+    build: .
+    container_name: caddy
+    environment:
+      - CADDY_INGRESS_NETWORKS=global_reverse_proxy
+    networks:
+      - global_reverse_proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - caddy_data:/data
+
+networks:
+  global_reverse_proxy:
+    external: true
+
+volumes:
+  caddy_data:
+    name: "global_reverse_proxy_volume"
